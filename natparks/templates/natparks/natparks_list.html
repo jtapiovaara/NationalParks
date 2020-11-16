@@ -9,15 +9,74 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 </head>
+<style>
+.flip-card {
+  background-color: transparent;
+  width: 300px;
+  height: 360px;
+  perspective: 1000px;
+}
+
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+}
+
+.flip-card:hover .flip-card-inner {
+  transform: rotateY(180deg);
+}
+
+.flip-card-front, .flip-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+.flip-card-front {
+  background-color: #bbb;
+  color: black;
+}
+
+.flip-card-back {
+  background-color: lightgrey;
+  {#color: white;#}
+  transform: rotateY(180deg);
+}
+</style>
+
 <body>
+
+Check also an <a href="{% url 'api' %}"><b>API</b></a>
+
 {% load static %}
-     <div class="container-fluid">
+     <div class="container">
          <div class="card-columns">
-        {% for kuva in object_list %}
-            <div class="card card-body shadow">
-                <img class="rounded img-fluid" src="{% static "images/" %}{{ kuva.picture }}" data-toggle="tooltip" title='{{ kuva.description }}'>
-            </div>
-        {% endfor %}
+            {% for kuva in object_list %}
+                    <div class="card-body flip-card">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front">
+                                <img class="rounded img-fluid" src="{% static "images/" %}{{ kuva.picture }}">
+                            </div>
+                            <div class="flip-card-back">
+                                <p>{{ kuva.title}}</p>
+                                <small>
+                                <p>{{ kuva.description}}</p>
+                                </small>
+                                <a href='{{ kuva.location }}' target="_blank">Lisätietoja</a>
+                                <a href="https://api.nasa.gov/planetary/earth/imagery?lon={{ kuva.natparkgeo_set.get.kohdeLon }}
+                                &lat={{ kuva.natparkgeo_set.get.kohdeLat }}&dim=0.15&api_key={{ nasakey }}" target="_blank">
+                                    Sateliittikuva</a>
+                            </div>
+                        </div>
+                    </div>
+            {% endfor %}
          </div>
      </div>
 </body>

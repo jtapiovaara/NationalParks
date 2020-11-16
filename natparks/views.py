@@ -1,7 +1,8 @@
 from django.views import generic
 from rest_framework import generics
 
-from .models import NatParks
+from NationalParks.settings import NASA_API_KEY
+from .models import NatParks, NatParkGeo
 from .serializers import NatParksSerializer
 
 
@@ -17,3 +18,14 @@ class DetailNatParks(generics.RetrieveUpdateDestroyAPIView):
 
 class PicNatParks(generic.ListView):
     model = NatParks
+
+    # def nasakey(self):
+    #     nasakey = NASA_API_KEY
+    #     return nasakey
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['nasakey'] = NASA_API_KEY
+        return context
+
+
